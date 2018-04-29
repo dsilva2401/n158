@@ -1,0 +1,21 @@
+
+vars:
+    asd: 123
+
+httpServers:
+    -   name: 'server'
+        ports:
+            http: 8000
+            https: 8001
+        routers:
+
+            -   name: 'api'
+                description: 'API Router'
+                path: '/api'
+                routes:
+
+                    # Demo service
+                    -   method: 'GET'
+                        path: '/hw'
+                        pipeline:
+                            -   handler: '$demo-handler'
