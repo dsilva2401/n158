@@ -1,3 +1,6 @@
+# N158 Seed
+
+Start sample server
 ```bash
-gulp servers:start
+npm start
 ```

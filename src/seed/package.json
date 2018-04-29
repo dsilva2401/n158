@@ -6,7 +6,8 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "process": "babel-node --presets es2015",
-    "server": "npm run process -- src/processes/server/index.js"
+    "server": "npm run process -- src/processes/server/index.js",
+    "start": "npm run server"
   },
   "author": "",
   "license": "ISC",
