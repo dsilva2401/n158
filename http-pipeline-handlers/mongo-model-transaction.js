@@ -65,22 +65,24 @@ exports.default = function (context, next, finish) {
 
     var transactionParams = resolveAttributes(context.params.transactionParams, true);
 
+    var rf = context.params.resolveRoute ? finish : next;
+
     if (!model) {
-        next(404, 'Model not found');
+        rf(404, 'Model not found');
         return;
     }
     if (!context.params.transaction) {
-        next(404, 'Transaction not found');
+        rf(404, 'Transaction not found');
         return;
     }
     if (!model[context.params.transaction]) {
-        next(404, 'Model transaction not found');
+        rf(404, 'Model transaction not found');
         return;
     }
 
     model[context.params.transaction].apply(model, transactionParams).then(function (resp) {
-        next(200, resp);
+        rf(200, resp);
     }).catch(function (resp) {
-        next(resp.status || 500, resp);
+        rf(resp.status || 500, resp);
     });
 };
