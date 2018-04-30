@@ -29,6 +29,10 @@ var _compression = require('compression');
 
 var _compression2 = _interopRequireDefault(_compression);
 
+var _morgan = require('morgan');
+
+var _morgan2 = _interopRequireDefault(_morgan);
+
 var _http = require('http');
 
 var _http2 = _interopRequireDefault(_http);
@@ -59,6 +63,7 @@ var ExpressServer = exports.ExpressServer = function () {
         this.app.use(_bodyParser2.default.json());
         this.app.use((0, _cookieParser2.default)());
         this.app.disable('x-powered-by');
+        this.app.use((0, _morgan2.default)('dev'));
         this.app.use(function (req, res, next) {
             req.startTimestamp = Date.now();
             res.header('Access-Control-Allow-Origin', '*');
