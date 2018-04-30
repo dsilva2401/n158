@@ -8,6 +8,7 @@ import express from 'express';
 import bodyParser from 'body-parser';
 import cookieParser from 'cookie-parser';
 import compression from 'compression';
+import morgan from 'morgan';
 import http from 'http';
 import fs from 'fs';
 import path from 'path';
@@ -22,6 +23,7 @@ export class ExpressServer {
         this.app.use(bodyParser.json());
         this.app.use(cookieParser());
         this.app.disable('x-powered-by');
+        this.app.use(morgan('dev'));
         this.app.use(function (req, res, next) {
             req.startTimestamp = Date.now();
             res.header('Access-Control-Allow-Origin', '*');

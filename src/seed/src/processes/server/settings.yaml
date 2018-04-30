@@ -9,6 +9,17 @@ httpServers:
             https: 8001
         routers:
 
+            -   name: 'webapps'
+                description: 'Webapps Router'
+                path: '/'
+                routes:
+
+                    # Demo service
+                    -   method: 'GET'
+                        path: '/'
+                        pipeline:
+                            -   staticsPath: '$demo-webapp'
+
             -   name: 'api'
                 description: 'API Router'
                 path: '/api'
@@ -16,6 +27,6 @@ httpServers:
 
                     # Demo service
                     -   method: 'GET'
-                        path: '/hw'
+                        path: '/demo'
                         pipeline:
                             -   handler: '$demo-handler'
