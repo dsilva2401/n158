@@ -20,5 +20,5 @@ processHandler.set('demo-handler', (context, next, finish) => {
     finish(200, 'Hello world');
 });
 
-// Setup database
+// Start servers
 processHandler.startHTTPServers();
