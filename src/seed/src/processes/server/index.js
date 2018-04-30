@@ -9,6 +9,9 @@ var procSettings = yaml.safeLoad(fs.readFileSync(procSettingsPath, 'utf-8'));
 // Init process handler
 var processHandler = new ProcessHandler(procSettings);
 
+// Setup server port
+processHandler.set('httpPort', process.env.PORT || processHandler.get('httpPort'));
+
 // Setup webapp
 processHandler.set('demo-webapp', path.join(__dirname, './webapps/home'));
 

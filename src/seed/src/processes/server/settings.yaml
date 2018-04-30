@@ -1,12 +1,11 @@
 
 vars:
-    asd: 123
+    httpPort: 8000
 
 httpServers:
     -   name: 'server'
         ports:
-            http: 8000
-            https: 8001
+            http: '$httpPort'
         routers:
 
             -   name: 'webapps'
