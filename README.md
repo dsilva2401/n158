@@ -1,5 +1,7 @@
 # N158
 
+<img src="assets/n158-logo.png" width="200px">
+
 > An easy way to handle HTTP servers and daemons with NodeJS
 
 To setup a base project just install the CLI command
