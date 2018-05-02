@@ -62,7 +62,7 @@ export class ExpressServer {
         var deferred = q.defer();
         this.startHTTPServer(httpPort).then(() => {
             deferred.resolve({
-                httpPort: httpPort
+                http: httpPort
             });
         });
         return deferred.promise;

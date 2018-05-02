@@ -5,8 +5,8 @@ import fs from 'fs';
 
 export class ProcessHandler {
     
-    constructor (settings) {
-        this.settings = this._resolveSettings(settings);
+    constructor (_settings) {
+        this.settings = this._resolveSettingsParams(_settings);
         this.procVariablesMap = {};
         this.httpServersMap = {};
         this._setupVars();
@@ -20,7 +20,7 @@ export class ProcessHandler {
         return this.procVariablesMap[key];
     }
 
-    _resolveSettings (settings) {
+    _resolveSettingsParams (settings) {
         if (typeof settings == 'object') {
             return settings;
         }
@@ -138,8 +138,9 @@ export class ProcessHandler {
         return Promise.all(
             Object.keys(this.httpServersMap).map((serverName) => {
                 var buffServer = this.httpServersMap[serverName].server;
+                var buffServerSettings = this.httpServersMap[serverName].settings;
                 return new Promise((resolve) => {
-                    buffServer.start((ports) => {
+                    buffServer.start(buffServerSettings.ports.http).then((ports) => {
                         resolve({
                             serverName: serverName,
                             ports: ports

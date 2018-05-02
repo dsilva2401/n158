@@ -3,6 +3,7 @@ import yaml from 'js-yaml';
 import path from 'path';
 import fs from 'fs';
 
+// Setup process handler settings
 var procSettingsPath = path.join(__dirname, './settings.yaml');
 var procSettings = yaml.safeLoad(fs.readFileSync(procSettingsPath, 'utf-8'));
 
@@ -23,6 +24,6 @@ processHandler.set('demo-handler', (context, next, finish) => {
 // Start servers
 processHandler.startHTTPServers().then((results) => {
     results.forEach((r) => {
-        console.log('Server '+r.serverName+' is running http server at port '+httpPort);
+        console.log('HTTP Server '+r.serverName+' is running at port '+r.ports.http);
     });
 });

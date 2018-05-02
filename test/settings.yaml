@@ -1,0 +1,31 @@
+
+vars:
+    httpPort: 8000
+
+httpServers:
+    -   name: 'server'
+        ports:
+            http: '$httpPort'
+        routers:
+
+            -   name: 'webapps'
+                description: 'Webapps Router'
+                path: '/'
+                routes:
+
+                    # Demo service
+                    -   method: 'GET'
+                        path: '/'
+                        pipeline:
+                            -   staticsPath: '$demo-webapp'
+
+            -   name: 'api'
+                description: 'API Router'
+                path: '/api'
+                routes:
+
+                    # Demo service
+                    -   method: 'GET'
+                        path: '/demo'
+                        pipeline:
+                            -   handler: '$demo-handler'

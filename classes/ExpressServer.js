@@ -102,7 +102,7 @@ var ExpressServer = exports.ExpressServer = function () {
             var deferred = _q2.default.defer();
             this.startHTTPServer(httpPort).then(function () {
                 deferred.resolve({
-                    httpPort: httpPort
+                    http: httpPort
                 });
             });
             return deferred.promise;

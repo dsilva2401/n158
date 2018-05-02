@@ -28,10 +28,10 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var ProcessHandler = exports.ProcessHandler = function () {
-    function ProcessHandler(settings) {
+    function ProcessHandler(_settings) {
         _classCallCheck(this, ProcessHandler);
 
-        this.settings = this._resolveSettings(settings);
+        this.settings = this._resolveSettingsParams(_settings);
         this.procVariablesMap = {};
         this.httpServersMap = {};
         this._setupVars();
@@ -48,8 +48,8 @@ var ProcessHandler = exports.ProcessHandler = function () {
             return this.procVariablesMap[key];
         }
     }, {
-        key: '_resolveSettings',
-        value: function _resolveSettings(settings) {
+        key: '_resolveSettingsParams',
+        value: function _resolveSettingsParams(settings) {
             if ((typeof settings === 'undefined' ? 'undefined' : _typeof(settings)) == 'object') {
                 return settings;
             }
@@ -182,8 +182,9 @@ var ProcessHandler = exports.ProcessHandler = function () {
             this._setupHTTPServers();
             return Promise.all(Object.keys(this.httpServersMap).map(function (serverName) {
                 var buffServer = _this5.httpServersMap[serverName].server;
+                var buffServerSettings = _this5.httpServersMap[serverName].settings;
                 return new Promise(function (resolve) {
-                    buffServer.start(function (ports) {
+                    buffServer.start(buffServerSettings.ports.http).then(function (ports) {
                         resolve({
                             serverName: serverName,
                             ports: ports
