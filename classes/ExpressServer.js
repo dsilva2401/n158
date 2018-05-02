@@ -5,13 +5,7 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.ExpressServer = undefined;
 
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }(); // var q = require('q');
-// var mongodb = require('mongodb');
-// var underscore = require('underscore');
-// var JSONSchema = require('jsonschema');
-// var validateJSONSchema = JSONSchema.validate;
-// var ObjectID = mongodb.ObjectID;
-
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 var _express = require('express');
 
@@ -104,10 +98,12 @@ var ExpressServer = exports.ExpressServer = function () {
         }
     }, {
         key: 'start',
-        value: function start(httpPort, httpsPort) {
+        value: function start(httpPort) {
             var deferred = _q2.default.defer();
             this.startHTTPServer(httpPort).then(function () {
-                deferred.resolve();
+                deferred.resolve({
+                    httpPort: httpPort
+                });
             });
             return deferred.promise;
         }

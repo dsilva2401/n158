@@ -7,15 +7,23 @@ exports.ProcessHandler = undefined;
 
 var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
 
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }(); // var q = require('q');
-// var mongodb = require('mongodb');
-// var underscore = require('underscore');
-// var JSONSchema = require('jsonschema');
-// var validateJSONSchema = JSONSchema.validate;
-// var ObjectID = mongodb.ObjectID;
-
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 var _ExpressServer = require('./ExpressServer');
+
+var _jsYaml = require('js-yaml');
+
+var _jsYaml2 = _interopRequireDefault(_jsYaml);
+
+var _path = require('path');
+
+var _path2 = _interopRequireDefault(_path);
+
+var _fs = require('fs');
+
+var _fs2 = _interopRequireDefault(_fs);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -23,7 +31,7 @@ var ProcessHandler = exports.ProcessHandler = function () {
     function ProcessHandler(settings) {
         _classCallCheck(this, ProcessHandler);
 
-        this.settings = settings;
+        this.settings = this._resolveSettings(settings);
         this.procVariablesMap = {};
         this.httpServersMap = {};
         this._setupVars();
@@ -38,6 +46,29 @@ var ProcessHandler = exports.ProcessHandler = function () {
         key: 'get',
         value: function get(key) {
             return this.procVariablesMap[key];
+        }
+    }, {
+        key: '_resolveSettings',
+        value: function _resolveSettings(settings) {
+            if ((typeof settings === 'undefined' ? 'undefined' : _typeof(settings)) == 'object') {
+                return settings;
+            }
+            if (typeof settings == 'string') {
+                if (settings.match(/.yaml$/)) {
+                    var procSettingsPath = _path2.default.resolve(settings);
+                    var procSettings = _jsYaml2.default.safeLoad(_fs2.default.readFileSync(procSettingsPath, 'utf-8'));
+                    return procSettings;
+                }
+                if (settings.match(/.json$/)) {
+                    var procSettingsPath = _path2.default.resolve(settings);
+                    var procSettings = JSON.parse(_fs2.default.readFileSync(procSettingsPath, 'utf-8'));
+                    return procSettings;
+                }
+                throw Error('n158 => ProcessHandler: Invalid settings file path');
+                return;
+            }
+            throw Error('n158 => ProcessHandler: Invalid settings param');
+            return;
         }
     }, {
         key: '_setupVars',
@@ -149,9 +180,17 @@ var ProcessHandler = exports.ProcessHandler = function () {
             var _this5 = this;
 
             this._setupHTTPServers();
-            Object.keys(this.httpServersMap).forEach(function (serverName) {
-                _this5.httpServersMap[serverName].server.start(_this5.httpServersMap[serverName].settings.ports.http);
-            });
+            return Promise.all(Object.keys(this.httpServersMap).map(function (serverName) {
+                var buffServer = _this5.httpServersMap[serverName].server;
+                return new Promise(function (resolve) {
+                    buffServer.start(function (ports) {
+                        resolve({
+                            serverName: serverName,
+                            ports: ports
+                        });
+                    });
+                });
+            }));
         }
     }, {
         key: 'startDaemons',

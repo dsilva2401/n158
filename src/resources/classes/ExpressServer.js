@@ -1,9 +1,3 @@
-// var q = require('q');
-// var mongodb = require('mongodb');
-// var underscore = require('underscore');
-// var JSONSchema = require('jsonschema');
-// var validateJSONSchema = JSONSchema.validate;
-// var ObjectID = mongodb.ObjectID;
 import express from 'express';
 import bodyParser from 'body-parser';
 import cookieParser from 'cookie-parser';
@@ -64,10 +58,12 @@ export class ExpressServer {
         return deferred.promise;
     }
     
-    start (httpPort, httpsPort) {
+    start (httpPort) {
         var deferred = q.defer();
         this.startHTTPServer(httpPort).then(() => {
-            deferred.resolve();
+            deferred.resolve({
+                httpPort: httpPort
+            });
         });
         return deferred.promise;
     }

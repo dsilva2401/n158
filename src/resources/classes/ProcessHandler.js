@@ -1,15 +1,12 @@
-// var q = require('q');
-// var mongodb = require('mongodb');
-// var underscore = require('underscore');
-// var JSONSchema = require('jsonschema');
-// var validateJSONSchema = JSONSchema.validate;
-// var ObjectID = mongodb.ObjectID;
 import {ExpressServer} from './ExpressServer';
+import yaml from 'js-yaml';
+import path from 'path';
+import fs from 'fs';
 
 export class ProcessHandler {
     
     constructor (settings) {
-        this.settings = settings;
+        this.settings = this._resolveSettings(settings);
         this.procVariablesMap = {};
         this.httpServersMap = {};
         this._setupVars();
@@ -21,6 +18,28 @@ export class ProcessHandler {
     
     get (key) {
         return this.procVariablesMap[key];
+    }
+
+    _resolveSettings (settings) {
+        if (typeof settings == 'object') {
+            return settings;
+        }
+        if (typeof settings == 'string') {
+            if (settings.match(/.yaml$/)) {
+                var procSettingsPath = path.resolve(settings);
+                var procSettings = yaml.safeLoad(fs.readFileSync(procSettingsPath, 'utf-8'));
+                return procSettings;
+            }
+            if (settings.match(/.json$/)) {
+                var procSettingsPath = path.resolve(settings);
+                var procSettings = JSON.parse(fs.readFileSync(procSettingsPath, 'utf-8'));
+                return procSettings;
+            }
+            throw Error ('n158 => ProcessHandler: Invalid settings file path');
+            return;
+        }
+        throw Error ('n158 => ProcessHandler: Invalid settings param');
+        return;
     }
 
     _setupVars () {
@@ -116,11 +135,19 @@ export class ProcessHandler {
 
     startHTTPServers () {
         this._setupHTTPServers();
-        Object.keys(this.httpServersMap).forEach((serverName) => {
-            this.httpServersMap[serverName].server.start(
-                this.httpServersMap[serverName].settings.ports.http
-            )
-        })
+        return Promise.all(
+            Object.keys(this.httpServersMap).map((serverName) => {
+                var buffServer = this.httpServersMap[serverName].server;
+                return new Promise((resolve) => {
+                    buffServer.start((ports) => {
+                        resolve({
+                            serverName: serverName,
+                            ports: ports
+                        });
+                    });
+                });
+            })
+        );
     }
 
     startDaemons () {}

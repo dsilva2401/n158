@@ -21,4 +21,8 @@ processHandler.set('demo-handler', (context, next, finish) => {
 });
 
 // Start servers
-processHandler.startHTTPServers();
+processHandler.startHTTPServers().then((results) => {
+    results.forEach((r) => {
+        console.log('Server '+r.serverName+' is running http server at port '+httpPort);
+    });
+});
