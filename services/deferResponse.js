@@ -22,7 +22,7 @@ exports.default = function () {
 				error: err || {}
 			});
 		} else {
-			if (!statusOrData.status) {
+			if (!statusOrErr.status) {
 				throw Error('Missing status attribute');
 			}
 			deferred.reject({
