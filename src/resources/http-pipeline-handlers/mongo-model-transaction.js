@@ -38,11 +38,9 @@ export default (context, next, finish) => {
             }
             if (fValue[0] == '%') {
                 var buffK = fValue.substring(1, fValue.length);
-                buffK = buffK.split('.')[0];
+                var buffK1 = buffK.split('.')[0];
                 var buffK2 = buffK.split('.')[1] || '';
-                fValue = resolveParamPath(
-                    context.get(buffK), buffK2
-                );
+                fValue = resolveParamPath(context.get(buffK1), buffK2);
             }
         } else if (typeof fValue == 'object') {
             if ( !Array.isArray(fValue) ) {
