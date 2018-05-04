@@ -23,37 +23,34 @@ export default (context, next, finish) => {
         return buffObj;
     }
 
-    var resolveAttributes = (value, init) => {
+    var resolveAttributes = (value) => {
         var fValue;
         if (typeof value == 'object') {
             fValue = JSON.parse(JSON.stringify(value));
         } else {
             fValue = value;
         }
-        if (typeof value == 'string') {
-            if (value[0] == '&') {
+        if (typeof fValue == 'string') {
+            if (fValue[0] == '&') {
                 fValue = resolveParamPath(
-                    context.req, value.substring(1, value.length)
+                    context.req, fValue.substring(1, fValue.length)
                 );
             }
-        } else if (typeof value == 'object') {
-            if ( !Array.isArray(value) ) {
-                Object.keys(value).forEach((k) => {
-                    value[k] = resolveAttributes(value[k]);
+        } else if (typeof fValue == 'object') {
+            if ( !Array.isArray(fValue) ) {
+                Object.keys(fValue).forEach((k) => {
+                    fValue[k] = resolveAttributes(fValue[k]);
                 });
             } else {
-                value = value.map((item) => {
+                fValue = fValue.map((item) => {
                     return resolveAttributes(item);
                 });
             }
         }
-        if (init) {
-            return value;
-        }
         return fValue;
     }
 
-    var transactionParams = resolveAttributes(context.params.transactionParams, true);
+    var transactionParams = resolveAttributes(context.params.transactionParams);
     
     var rf = (context.params.resolveRoute ? finish : next);
 

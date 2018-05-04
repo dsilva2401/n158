@@ -35,35 +35,32 @@ exports.default = function (context, next, finish) {
         return buffObj;
     };
 
-    var resolveAttributes = function resolveAttributes(value, init) {
+    var resolveAttributes = function resolveAttributes(value) {
         var fValue;
         if ((typeof value === 'undefined' ? 'undefined' : _typeof(value)) == 'object') {
             fValue = JSON.parse(JSON.stringify(value));
         } else {
             fValue = value;
         }
-        if (typeof value == 'string') {
-            if (value[0] == '&') {
-                fValue = resolveParamPath(context.req, value.substring(1, value.length));
+        if (typeof fValue == 'string') {
+            if (fValue[0] == '&') {
+                fValue = resolveParamPath(context.req, fValue.substring(1, fValue.length));
             }
-        } else if ((typeof value === 'undefined' ? 'undefined' : _typeof(value)) == 'object') {
-            if (!Array.isArray(value)) {
-                Object.keys(value).forEach(function (k) {
-                    value[k] = resolveAttributes(value[k]);
+        } else if ((typeof fValue === 'undefined' ? 'undefined' : _typeof(fValue)) == 'object') {
+            if (!Array.isArray(fValue)) {
+                Object.keys(fValue).forEach(function (k) {
+                    fValue[k] = resolveAttributes(fValue[k]);
                 });
             } else {
-                value = value.map(function (item) {
+                fValue = fValue.map(function (item) {
                     return resolveAttributes(item);
                 });
             }
         }
-        if (init) {
-            return value;
-        }
         return fValue;
     };
 
-    var transactionParams = resolveAttributes(context.params.transactionParams, true);
+    var transactionParams = resolveAttributes(context.params.transactionParams);
 
     var rf = context.params.resolveRoute ? finish : next;
 
