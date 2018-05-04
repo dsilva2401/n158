@@ -81,11 +81,18 @@ var ProcessHandler = exports.ProcessHandler = function () {
         }
     }, {
         key: '_resolveHandler',
-        value: function _resolveHandler(handler, params, routeSettings) {
+        value: function _resolveHandler(pipelineItemData, routeSettings) {
             return function (req, res, next) {
                 req.locals = req.locals || {};
-                handler({
-                    params: params || {},
+                if (pipelineItemData.skipWhenErrors && req.locals.status) {
+                    var sType = Math.floor(req.locals.status / 100);
+                    if (sType == 4 || sType == 5) {
+                        next();
+                        return;
+                    }
+                }
+                pipelineItemData.handler({
+                    params: pipelineItemData.params || {},
                     routeSettings: routeSettings,
                     req: req,
                     res: res,
@@ -133,7 +140,7 @@ var ProcessHandler = exports.ProcessHandler = function () {
                         if (pipelineItemData.staticsPath) {
                             handlerSetup.staticsPath = pipelineItemData.staticsPath;
                         } else {
-                            handlerSetup.handler = _this2._resolveHandler(pipelineItemData.handler, pipelineItemData.params, routeData);
+                            handlerSetup.handler = _this2._resolveHandler(pipelineItemData, routeData);
                         }
                         server.addRoute(routerData.name, handlerSetup);
                     });
