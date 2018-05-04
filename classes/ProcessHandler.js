@@ -122,6 +122,9 @@ var ProcessHandler = exports.ProcessHandler = function () {
             serverSettings.routers.forEach(function (routerData) {
                 server.addRouter(routerData.name, routerData.path);
                 routerData.routes.forEach(function (routeData) {
+                    routeData.pipeline.push(function (context, next, finish) {
+                        finish();
+                    });
                     routeData.pipeline.forEach(function (pipelineItemData) {
                         var handlerSetup = {
                             method: routeData.method,
