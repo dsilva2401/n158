@@ -89,8 +89,10 @@ export class ProcessHandler {
         serverSettings.routers.forEach((routerData) => {
             server.addRouter(routerData.name, routerData.path);
             routerData.routes.forEach((routeData) => {
-                routeData.pipeline.push((context, next, finish) => {
-                    finish();
+                routeData.pipeline.push({
+                    handler: (context, next, finish) => {
+                        finish();
+                    }
                 });
                 routeData.pipeline.forEach((pipelineItemData) => {
                     var handlerSetup = {
