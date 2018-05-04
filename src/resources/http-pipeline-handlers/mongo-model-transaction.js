@@ -36,6 +36,14 @@ export default (context, next, finish) => {
                     context.req, fValue.substring(1, fValue.length)
                 );
             }
+            if (fValue[0] == '%') {
+                var buffK = fValue.substring(1, fValue.length);
+                buffK = buffK.split('.')[0];
+                var buffK2 = buffK.split('.')[1] || '';
+                fValue = resolveParamPath(
+                    context.get(buffK), buffK2
+                );
+            }
         } else if (typeof fValue == 'object') {
             if ( !Array.isArray(fValue) ) {
                 Object.keys(fValue).forEach((k) => {
