@@ -59,6 +59,8 @@ export class ProcessHandler {
                 }
             }
             pipelineItemData.handler({
+                processGet: (key) => { return this.get(key); },
+                processSet: (key, value) => { return this.set(key, value); },
                 params: pipelineItemData.params || {},
                 routeSettings: routeSettings,
                 req: req,
