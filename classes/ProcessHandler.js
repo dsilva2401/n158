@@ -82,6 +82,8 @@ var ProcessHandler = exports.ProcessHandler = function () {
     }, {
         key: '_resolveHandler',
         value: function _resolveHandler(pipelineItemData, routeSettings) {
+            var _this2 = this;
+
             return function (req, res, next) {
                 req.locals = req.locals || {};
                 if (pipelineItemData.skipWhenErrors && req.locals.status) {
@@ -91,7 +93,14 @@ var ProcessHandler = exports.ProcessHandler = function () {
                         return;
                     }
                 }
+                var procSelf = _this2;
                 pipelineItemData.handler({
+                    processGet: function processGet(key) {
+                        return procSelf.get(key);
+                    },
+                    processSet: function processSet(key, value) {
+                        return procSelf.set(key, value);
+                    },
                     params: pipelineItemData.params || {},
                     routeSettings: routeSettings,
                     req: req,
@@ -118,7 +127,7 @@ var ProcessHandler = exports.ProcessHandler = function () {
     }, {
         key: '_attachHTTPServer',
         value: function _attachHTTPServer(name, serverSettings) {
-            var _this2 = this;
+            var _this3 = this;
 
             // Init server
             var server = new _ExpressServer.ExpressServer();
@@ -142,7 +151,7 @@ var ProcessHandler = exports.ProcessHandler = function () {
                         if (pipelineItemData.staticsPath) {
                             handlerSetup.staticsPath = pipelineItemData.staticsPath;
                         } else {
-                            handlerSetup.handler = _this2._resolveHandler(pipelineItemData, routeData);
+                            handlerSetup.handler = _this3._resolveHandler(pipelineItemData, routeData);
                         }
                         server.addRoute(routerData.name, handlerSetup);
                     });
@@ -152,14 +161,14 @@ var ProcessHandler = exports.ProcessHandler = function () {
     }, {
         key: '_resolveSettings',
         value: function _resolveSettings(settings) {
-            var _this3 = this;
+            var _this4 = this;
 
             var VAR_CHAR = '$';
             var r = function r(value) {
                 var fValue = value;
                 if (typeof value == 'string') {
                     if (value[0] == VAR_CHAR) {
-                        fValue = _this3.get(value.substring(1, value.length));
+                        fValue = _this4.get(value.substring(1, value.length));
                     }
                 } else if ((typeof value === 'undefined' ? 'undefined' : _typeof(value)) == 'object') {
                     if (!Array.isArray(value)) {
@@ -179,22 +188,22 @@ var ProcessHandler = exports.ProcessHandler = function () {
     }, {
         key: '_setupHTTPServers',
         value: function _setupHTTPServers() {
-            var _this4 = this;
+            var _this5 = this;
 
             var settings = this._resolveSettings(this.settings);
             settings.httpServers.forEach(function (httpServerData) {
-                _this4._attachHTTPServer(httpServerData.name, httpServerData);
+                _this5._attachHTTPServer(httpServerData.name, httpServerData);
             });
         }
     }, {
         key: 'startHTTPServers',
         value: function startHTTPServers() {
-            var _this5 = this;
+            var _this6 = this;
 
             this._setupHTTPServers();
             return Promise.all(Object.keys(this.httpServersMap).map(function (serverName) {
-                var buffServer = _this5.httpServersMap[serverName].server;
-                var buffServerSettings = _this5.httpServersMap[serverName].settings;
+                var buffServer = _this6.httpServersMap[serverName].server;
+                var buffServerSettings = _this6.httpServersMap[serverName].settings;
                 return new Promise(function (resolve) {
                     buffServer.start(buffServerSettings.ports.http).then(function (ports) {
                         resolve({
@@ -212,3 +221,4 @@ var ProcessHandler = exports.ProcessHandler = function () {
 
     return ProcessHandler;
 }();
+//# sourceMappingURL=ProcessHandler.js.map

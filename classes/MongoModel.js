@@ -203,3 +203,4 @@ var MongoModel = exports.MongoModel = function () {
 
     return MongoModel;
 }();
+//# sourceMappingURL=MongoModel.js.map

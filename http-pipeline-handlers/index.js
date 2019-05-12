@@ -12,3 +12,4 @@ var _mongoModelTransaction2 = _interopRequireDefault(_mongoModelTransaction);
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 exports.modelMongoTransaction = _mongoModelTransaction2.default;
+//# sourceMappingURL=index.js.map

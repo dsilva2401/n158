@@ -17,3 +17,4 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 exports.deferResponse = _deferResponse2.default;
 exports.connectMongoDb = _connectMongoDb2.default;
+//# sourceMappingURL=index.js.map

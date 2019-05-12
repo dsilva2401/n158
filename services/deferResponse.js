@@ -37,3 +37,4 @@ exports.default = function () {
 	};
 	return customDeferred;
 };
+//# sourceMappingURL=deferResponse.js.map

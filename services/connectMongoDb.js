@@ -24,3 +24,4 @@ exports.default = function (dbUrl, dbName) {
 	});
 	return deferred.promise;
 };
+//# sourceMappingURL=connectMongoDb.js.map
