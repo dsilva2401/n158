@@ -58,9 +58,10 @@ export class ProcessHandler {
                     return;
                 }
             }
+            var procSelf = this;
             pipelineItemData.handler({
-                processGet: (key) => { return this.get(key); },
-                processSet: (key, value) => { return this.set(key, value); },
+                processGet: (key) => { return procSelf.get(key); },
+                processSet: (key, value) => { return procSelf.set(key, value); },
                 params: pipelineItemData.params || {},
                 routeSettings: routeSettings,
                 req: req,
