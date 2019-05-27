@@ -4,6 +4,7 @@ import cookieParser from 'cookie-parser';
 import compression from 'compression';
 import morgan from 'morgan';
 import http from 'http';
+import https from 'https';
 import fs from 'fs';
 import path from 'path';
 import q from 'q';
@@ -57,13 +58,34 @@ export class ExpressServer {
         });
         return deferred.promise;
     }
+
+    startHTTPSServer (httpsPort, credentials) {
+        var deferred = q.defer();
+        this.httpsServer = https.createServer({
+            key: credentials.key,
+            cert: credentials.cert
+        }, this.app);
+        this.httpsServer.listen(httpsPort, () => {
+            deferred.resolve();
+        });
+        return deferred.promise;
+    }
     
-    start (httpPort) {
+    start (httpPort, httpsPort, credentials) {
         var deferred = q.defer();
         this.startHTTPServer(httpPort).then(() => {
-            deferred.resolve({
-                http: httpPort
-            });
+            if (!httpsPort || !credentials) {
+                deferred.resolve({
+                    http: httpPort
+                });
+                return;
+            }
+            this.startHTTPSServer(httpsPort, credentials).then(() => {
+                deferred.resolve({
+                    http: httpPort,
+                    https: httpsPort
+                });
+            })
         });
         return deferred.promise;
     }

@@ -147,14 +147,14 @@ export class ProcessHandler {
         });
     }
 
-    startHTTPServers () {
+    startHTTPServers (credentials) {
         this._setupHTTPServers();
         return Promise.all(
             Object.keys(this.httpServersMap).map((serverName) => {
                 var buffServer = this.httpServersMap[serverName].server;
                 var buffServerSettings = this.httpServersMap[serverName].settings;
                 return new Promise((resolve) => {
-                    buffServer.start(buffServerSettings.ports.http).then((ports) => {
+                    buffServer.start(buffServerSettings.ports.http, buffServerSettings.ports.https, credentials).then((ports) => {
                         resolve({
                             serverName: serverName,
                             ports: ports

@@ -197,7 +197,7 @@ var ProcessHandler = exports.ProcessHandler = function () {
         }
     }, {
         key: 'startHTTPServers',
-        value: function startHTTPServers() {
+        value: function startHTTPServers(credentials) {
             var _this6 = this;
 
             this._setupHTTPServers();
@@ -205,7 +205,7 @@ var ProcessHandler = exports.ProcessHandler = function () {
                 var buffServer = _this6.httpServersMap[serverName].server;
                 var buffServerSettings = _this6.httpServersMap[serverName].settings;
                 return new Promise(function (resolve) {
-                    buffServer.start(buffServerSettings.ports.http).then(function (ports) {
+                    buffServer.start(buffServerSettings.ports.http, buffServerSettings.ports.https, credentials).then(function (ports) {
                         resolve({
                             serverName: serverName,
                             ports: ports

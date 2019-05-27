@@ -31,6 +31,10 @@ var _http = require('http');
 
 var _http2 = _interopRequireDefault(_http);
 
+var _https = require('https');
+
+var _https2 = _interopRequireDefault(_https);
+
 var _fs = require('fs');
 
 var _fs2 = _interopRequireDefault(_fs);
@@ -97,12 +101,36 @@ var ExpressServer = exports.ExpressServer = function () {
             return deferred.promise;
         }
     }, {
+        key: 'startHTTPSServer',
+        value: function startHTTPSServer(httpsPort, credentials) {
+            var deferred = _q2.default.defer();
+            this.httpsServer = _https2.default.createServer({
+                key: credentials.key,
+                cert: credentials.cert
+            }, this.app);
+            this.httpsServer.listen(httpsPort, function () {
+                deferred.resolve();
+            });
+            return deferred.promise;
+        }
+    }, {
         key: 'start',
-        value: function start(httpPort) {
+        value: function start(httpPort, httpsPort, credentials) {
+            var _this = this;
+
             var deferred = _q2.default.defer();
             this.startHTTPServer(httpPort).then(function () {
-                deferred.resolve({
-                    http: httpPort
+                if (!httpsPort || !credentials) {
+                    deferred.resolve({
+                        http: httpPort
+                    });
+                    return;
+                }
+                _this.startHTTPSServer(httpsPort, credentials).then(function () {
+                    deferred.resolve({
+                        http: httpPort,
+                        https: httpsPort
+                    });
                 });
             });
             return deferred.promise;
