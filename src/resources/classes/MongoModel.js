@@ -88,6 +88,18 @@ export class MongoModel {
         return deferred.promise;
     }
 
+    rawUpdate (criteria, updateData) {
+        var deferred = deferResponse();
+        this.collection.update(criteria, updateData, (err, resp) => {
+            if (err) {
+                deferred.reject(500, 'Update error on db', err);
+                return;
+            }
+            deferred.resolve(resp);
+        });
+        return deferred.promise;
+    }
+
     update (id, data) {
         var deferred = deferResponse();
         this.findById(id).then((instance) => {

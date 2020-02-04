@@ -121,6 +121,19 @@ var MongoModel = exports.MongoModel = function () {
             return deferred.promise;
         }
     }, {
+        key: 'rawUpdate',
+        value: function rawUpdate(criteria, updateData) {
+            var deferred = (0, _services.deferResponse)();
+            this.collection.update(criteria, updateData, function (err, resp) {
+                if (err) {
+                    deferred.reject(500, 'Update error on db', err);
+                    return;
+                }
+                deferred.resolve(resp);
+            });
+            return deferred.promise;
+        }
+    }, {
         key: 'update',
         value: function update(id, data) {
             var _this3 = this;
