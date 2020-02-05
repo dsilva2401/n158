@@ -122,9 +122,10 @@ var MongoModel = exports.MongoModel = function () {
         }
     }, {
         key: 'rawUpdate',
-        value: function rawUpdate(criteria, updateData) {
+        value: function rawUpdate(criteria, updateData, options) {
+            options = options || {};
             var deferred = (0, _services.deferResponse)();
-            this.collection.update(criteria, updateData, function (err, resp) {
+            this.collection.update(criteria, updateData, options, function (err, resp) {
                 if (err) {
                     deferred.reject(500, 'Update error on db', err);
                     return;
